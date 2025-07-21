@@ -1,21 +1,40 @@
 import express from 'express';
-import { createOrUpdatePage, getPageBySlug, deletePageBySlug } from '../controllers/pageController.js';
+import {
+  createPage,
+  getPageById,
+  updatePageById,
+  deletePageById,
+  getAllPages
+} from '../controllers/pageController.js';
 import upload from '../middlewares/upload.js';
 
 const router = express.Router();
 
-
-
-// Accept both images with field names: 'contentImage' and 'backgroundImage'
+// CREATE
 router.post(
   '/page',
   upload.fields([
-    { name: 'contentImage', maxCount: 1 },
     { name: 'backgroundImage', maxCount: 1 }
   ]),
-  createOrUpdatePage
+  createPage
 );
-router.get('/page/:slug', getPageBySlug);
-router.delete('/page/:slug', deletePageBySlug);
+
+// READ ONE
+router.get('/page/:id', getPageById);
+
+// GET ALL PAGES
+router.get('/pages', getAllPages);
+
+// UPDATE
+router.put(
+  '/page/:id',
+  upload.fields([
+    { name: 'backgroundImage', maxCount: 1 }
+  ]),
+  updatePageById
+);
+
+// DELETE
+router.delete('/page/:id', deletePageById);
 
 export default router;

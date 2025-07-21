@@ -1,29 +1,21 @@
 import mongoose from 'mongoose';
 
-const subsectionSchema = new mongoose.Schema({
-  heading: String,
-  body: String,
-});
+// MIGRATION INSTRUCTIONS:
+// If you get errors after making pageName required, run this in your MongoDB shell or Compass:
+// db.pages.updateMany({ pageName: { $exists: false } }, { $set: { pageName: "MIGRATED" } })
+// Or delete old documents: db.pages.deleteMany({ pageName: { $exists: false } })
+// Then restart your backend server.
 
 const pageSchema = new mongoose.Schema({
-  pageName: { type: String, required: true },
-  slug: { type: String, required: true, unique: true },
-  title: String,
-  description: String,
-  h1: String,
-  h2: String,
-  h3: String,
-  h4: String,
-  h5: String,
-  h6: String,
-  subsections: [subsectionSchema],
-  content: String,
-  primaryColor: String,
-  secondaryColor: String,
-  contentImage: String,
-  backgroundColor: String,
-  backgroundImage: String,
-  status: { type: String, enum: ['draft', 'published'], default: 'draft' },
+  pageName: { type: String, required: true, trim: true },
+  // slug: { type: String, required: true, trim: true, unique: true },
+  backgroundImage: { type: String, trim: true },
+  backgroundOverlayContent: { type: String, trim: true },
+  status: { 
+    type: String, 
+    enum: ['draft', 'published'], 
+    default: 'draft' 
+  },
 }, { timestamps: true });
 
 export default mongoose.model('Page', pageSchema);

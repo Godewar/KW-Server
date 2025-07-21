@@ -1,29 +1,20 @@
 import express from 'express';
-import {
-  createOrUpdateAgent,
-  getAllAgents,
-   getAgentBySlug,
-  
- deleteAgentBySlug
-} from '../controllers/agentController.js';
+import { registerUser, loginUser, getAllUsers, getUserById, updateUser, deleteUser } from '../controllers/userController.js';
+import upload from '../middlewares/upload.js';
 
 const router = express.Router();
-import upload  from '../middlewares/upload.js';
 
-// Create agent (user registration style)
-// router.post('/users/register', registerAgent);
-router.post('/user', upload.single('profileImage'), createOrUpdateAgent);
-
-// Read all agents
-router.get('/users', getAllAgents);
-
-// Read one agent by slug
-router.get('/user/:slug', getAgentBySlug);
-
-// Update agent by slug
-// router.put('/user/:slug', updateAgent);
-
-// Delete agent by slug
-router.delete('/user/:slug', deleteAgentBySlug);
+// User registration (with optional profile image)
+router.post('/user/register', upload.single('profileImage'), registerUser);
+// User login
+router.post('/user/login', loginUser);
+// Get all users
+router.get('/user', getAllUsers);
+// Get user by ID
+router.get('/user/:id', getUserById);
+// Update user
+router.put('/user/:id', upload.single('profileImage'), updateUser);
+// Delete user
+router.delete('/user/:id', deleteUser);
 
 export default router;

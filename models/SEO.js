@@ -1,11 +1,10 @@
 import mongoose from 'mongoose';
 
 const seoSchema = new mongoose.Schema({
-  pageSlug: { type: String, required: true, unique: true },
-  metaTitle: String,
+  pageName: { type: String, required: true },
   metaDescription: String,
-  metaKeywords: [String],
-  metaAltTag: String,
-}, { timestamps: true });
+  metaKeyword: String,
+  createdAt: { type: Date, default: Date.now }
+});
 
 export default mongoose.model('SEO', seoSchema);

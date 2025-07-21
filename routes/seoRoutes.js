@@ -1,14 +1,12 @@
 import express from 'express';
-import {
-  createOrUpdateSEO,
-  getSEOBySlug,
-  deleteSEOBySlug
-} from '../controllers/seoController.js';
+import { createSEO, getAllSEO, getSEOById, updateSEO, deleteSEO } from '../controllers/seoController.js';
 
 const router = express.Router();
 
-router.post('/seo', createOrUpdateSEO);
-router.get('/seo/:slug', getSEOBySlug);
-router.delete('/seo/:slug', deleteSEOBySlug);
+router.post('/seo', createSEO);
+router.get('/seo', getAllSEO);
+router.get('/seo/:id', getSEOById);
+router.put('/seo/:id', updateSEO);
+router.delete('/seo/:id', deleteSEO);
 
 export default router;

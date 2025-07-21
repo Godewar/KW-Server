@@ -3,38 +3,46 @@ import Blog from '../models/Blog.js';
 // Create blog
 export const createBlog = async (req, res) => {
   try {
+    console.log('Request body:', req.body);
+    console.log('Request files:', req.files);
+    
     const {
       title,
-      slug,
       content,
-      excerpt,
       author,
       tags,
-      category,
       isPublished,
       publishedAt
     } = req.body;
 
-    const contentImage = req.files?.contentImage?.[0]?.path;
-    const coverImage = req.files?.coverImage?.[0]?.path;
+    // Validate required fields
+    if (!title || !content) {
+      return res.status(400).json({ error: 'Title and content are required' });
+    }
 
-    const blog = new Blog({
+    // Find coverImage file from files array
+    const coverImageFile = req.files?.find(file => file.fieldname === 'coverImage');
+    const coverImage = coverImageFile?.path;
+    console.log('Cover image path:', coverImage);
+
+    const blogData = {
       title,
-      slug,
       content,
-      excerpt,
-      author,
-      tags,
-      category,
-      isPublished,
-      publishedAt,
-      contentImage,
-      coverImage
-    });
+      author: author || '',
+      tags: Array.isArray(tags) ? tags : (tags ? [tags] : []),
+      isPublished: isPublished === 'true' || isPublished === true,
+      publishedAt: publishedAt || null,
+      coverImage: coverImage || null
+    };
 
+    console.log('Blog data to save:', blogData);
+
+    const blog = new Blog(blogData);
     const saved = await blog.save();
+    console.log('Blog saved successfully:', saved);
     res.status(201).json(saved);
   } catch (error) {
+    console.error('Error creating blog:', error);
     res.status(500).json({ error: 'Failed to create blog', details: error.message });
   }
 };
@@ -49,10 +57,10 @@ export const getAllBlogs = async (req, res) => {
   }
 };
 
-// Get blog by slug
-export const getBlogBySlug = async (req, res) => {
+// Get blog by id
+export const getBlogById = async (req, res) => {
   try {
-    const blog = await Blog.findOne({ slug: req.params.slug });
+    const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ error: 'Blog not found' });
     res.status(200).json(blog);
   } catch (error) {
@@ -61,10 +69,10 @@ export const getBlogBySlug = async (req, res) => {
 };
 
 // Update blog
-export const updateBlogBySlug = async (req, res) => {
+export const updateBlogById = async (req, res) => {
   try {
-    const blog = await Blog.findOneAndUpdate(
-      { slug: req.params.slug },
+    const blog = await Blog.findByIdAndUpdate(
+      req.params.id,
       req.body,
       { new: true, runValidators: true }
     );
@@ -76,9 +84,9 @@ export const updateBlogBySlug = async (req, res) => {
 };
 
 // Delete blog
-export const deleteBlogBySlug = async (req, res) => {
+export const deleteBlogById = async (req, res) => {
   try {
-    const deleted = await Blog.findOneAndDelete({ slug: req.params.slug });
+    const deleted = await Blog.findByIdAndDelete(req.params.id);
     if (!deleted) return res.status(404).json({ error: 'Blog not found' });
     res.status(200).json({ message: 'Blog deleted successfully' });
   } catch (error) {
