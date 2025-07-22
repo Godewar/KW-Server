@@ -11,6 +11,7 @@ import listingRoutes from './routes/listingRoutes.js'
 import agentRoutes from './routes/agentRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import leadRoutes from './routes/leadRoutes.js';
+import teamRoutes from './routes/teamRoutes.js';
 dotenv.config();
 
 const app = express();
@@ -50,6 +51,7 @@ app.use('/api/listings', listingRoutes);
 app.use('/api', agentRoutes);
 app.use('/api', userRoutes);
 app.use('/api', leadRoutes);
+app.use('/api', teamRoutes);
 app.use('/uploads', express.static('uploads')); // serve images
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
