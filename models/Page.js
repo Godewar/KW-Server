@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 
 const pageSchema = new mongoose.Schema({
   pageName: { type: String, required: true, trim: true },
-  // slug: { type: String, required: true, trim: true, unique: true },
+  // slug field is removed
   backgroundImage: { type: String, trim: true },
   backgroundOverlayContent: { type: String, trim: true },
   status: { 
